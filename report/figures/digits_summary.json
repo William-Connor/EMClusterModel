@@ -1,0 +1,399 @@
+{
+  "dataset": "digits",
+  "n_samples": 1797,
+  "n_features": 64,
+  "n_classes": 10,
+  "pca_dim": null,
+  "selected_k": 10,
+  "covariance_type": "full",
+  "train_time_seconds": 2.7,
+  "n_iterations": 51,
+  "converged": true,
+  "final_log_likelihood": 77442.26,
+  "bic": 359380113.14,
+  "aic": 359288063.27,
+  "train_metrics": {
+    "accuracy": 0.2522,
+    "precision_macro": 0.3851,
+    "recall_macro": 0.2527,
+    "f1_macro": 0.1826,
+    "ari": 0.1191,
+    "nmi": 0.2812
+  },
+  "test_metrics": {
+    "accuracy": 0.2259,
+    "precision_macro": 0.1242,
+    "recall_macro": 0.2266,
+    "f1_macro": 0.1313,
+    "precision_weighted": 0.1234,
+    "recall_weighted": 0.2259,
+    "f1_weighted": 0.1305,
+    "ari": 0.1054,
+    "nmi": 0.248
+  },
+  "n_errors_test": 418,
+  "error_rate": 0.7741,
+  "error_details": [
+    {
+      "index": 0,
+      "true_label": 1,
+      "predicted_label": 2,
+      "raw_prediction": 1,
+      "probability": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 1,
+      "true_label": 3,
+      "predicted_label": 7,
+      "raw_prediction": 2,
+      "probability": [
+        0.0,
+        2.264647482570513e-178,
+        0.9999957579689271,
+        0.0,
+        4.242031071915292e-06,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 2,
+      "true_label": 1,
+      "predicted_label": 7,
+      "raw_prediction": 2,
+      "probability": [
+        0.0,
+        3.723417854076025e-102,
+        0.9994533939992657,
+        0.0,
+        0.0005466060007310604,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 3,
+      "true_label": 5,
+      "predicted_label": 4,
+      "raw_prediction": 8,
+      "probability": [
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity
+      ]
+    },
+    {
+      "index": 5,
+      "true_label": 6,
+      "predicted_label": 0,
+      "raw_prediction": 4,
+      "probability": [
+        0.0,
+        5.303882326660338e-38,
+        2.3841200253617847e-35,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 6,
+      "true_label": 6,
+      "predicted_label": 0,
+      "raw_prediction": 4,
+      "probability": [
+        0.0,
+        5.0789171631891883e-272,
+        6.8988803524821166e-34,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 8,
+      "true_label": 4,
+      "predicted_label": 7,
+      "raw_prediction": 2,
+      "probability": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        3.25962134151987e-49,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 9,
+      "true_label": 9,
+      "predicted_label": 0,
+      "raw_prediction": 4,
+      "probability": [
+        0.0,
+        0.0,
+        3.4393876487693676e-10,
+        0.0,
+        0.9999999996560618,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 10,
+      "true_label": 3,
+      "predicted_label": 0,
+      "raw_prediction": 4,
+      "probability": [
+        0.0,
+        0.0,
+        6.396938043135945e-08,
+        0.0,
+        0.9999999360306211,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 11,
+      "true_label": 9,
+      "predicted_label": 0,
+      "raw_prediction": 4,
+      "probability": [
+        0.0,
+        0.0,
+        3.177423934795846e-05,
+        0.0,
+        0.9999682257606534,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 14,
+      "true_label": 6,
+      "predicted_label": 2,
+      "raw_prediction": 1,
+      "probability": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 15,
+      "true_label": 1,
+      "predicted_label": 2,
+      "raw_prediction": 1,
+      "probability": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 16,
+      "true_label": 5,
+      "predicted_label": 7,
+      "raw_prediction": 2,
+      "probability": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        2.4398934949488326e-32,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 17,
+      "true_label": 7,
+      "predicted_label": 4,
+      "raw_prediction": 8,
+      "probability": [
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity,
+        Infinity
+      ]
+    },
+    {
+      "index": 18,
+      "true_label": 3,
+      "predicted_label": 0,
+      "raw_prediction": 4,
+      "probability": [
+        0.0,
+        1.1705859475197389e-117,
+        4.655910844114086e-26,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 19,
+      "true_label": 3,
+      "predicted_label": 7,
+      "raw_prediction": 2,
+      "probability": [
+        0.0,
+        0.0,
+        0.881269439900916,
+        0.0,
+        0.11873056009908602,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 20,
+      "true_label": 9,
+      "predicted_label": 7,
+      "raw_prediction": 2,
+      "probability": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        9.482793611257343e-30,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 21,
+      "true_label": 8,
+      "predicted_label": 7,
+      "raw_prediction": 2,
+      "probability": [
+        0.0,
+        0.0,
+        0.9999999999183729,
+        0.0,
+        8.162661802028914e-11,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 22,
+      "true_label": 5,
+      "predicted_label": 7,
+      "raw_prediction": 2,
+      "probability": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "index": 23,
+      "true_label": 5,
+      "predicted_label": 7,
+      "raw_prediction": 2,
+      "probability": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.5299852988837316e-17,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "model_selection": null
+}
