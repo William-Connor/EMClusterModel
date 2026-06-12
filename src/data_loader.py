@@ -1,62 +1,99 @@
 """
 EM 聚类算法工程 — 数据加载模块
 支持数据集：Pen Digits (UCI), Optdigits (UCI), Digits (sklearn)
+
+策略：优先从本地 data/raw/ 加载 .npy 缓存，仅首次运行时从网络下载。
 """
 
 import os
 import numpy as np
 from sklearn.datasets import load_digits
-from ucimlrepo import fetch_ucirepo
+
+# 数据目录：项目根目录下的 data/raw/
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(PROJECT_ROOT, "data", "raw")
 
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "raw")
+def _load_or_download(name, download_fn):
+    """
+    通用加载器：优先本地缓存，缺失时下载并缓存
+    
+    参数:
+        name: 数据集名称（用于文件名）
+        download_fn: 无参函数，返回 (X, y) 的下载函数
+    返回:
+        X, y: numpy arrays
+    """
+    x_path = os.path.join(DATA_DIR, f"{name}_X.npy")
+    y_path = os.path.join(DATA_DIR, f"{name}_y.npy")
+    
+    if os.path.exists(x_path) and os.path.exists(y_path):
+        print(f"[INFO] 从本地加载 {name} 数据集...")
+        X = np.load(x_path).astype(np.float64)
+        y = np.load(y_path).astype(np.int64)
+        print(f"[OK] {name}: {X.shape[0]} 样本, {X.shape[1]} 特征, {len(np.unique(y))} 类 (本地缓存)")
+        return X, y
+    
+    print(f"[INFO] 本地缓存缺失，从网络下载 {name} 数据集...")
+    X, y = download_fn()
+    os.makedirs(DATA_DIR, exist_ok=True)
+    np.save(x_path, X)
+    np.save(y_path, y)
+    print(f"[OK] {name}: {X.shape[0]} 样本, {X.shape[1]} 特征, {len(np.unique(y))} 类 (已缓存)")
+    return X, y
+
+
+def _download_pendigits():
+    """从 UCI 下载 Pen Digits"""
+    from ucimlrepo import fetch_ucirepo
+    pendigits = fetch_ucirepo(id=81)
+    X = pendigits.data.features.values.astype(np.float64)
+    y = pendigits.data.targets.values.ravel().astype(np.int64)
+    return X, y
+
+
+def _download_optdigits():
+    """从 UCI 下载 Optdigits"""
+    from ucimlrepo import fetch_ucirepo
+    optdigits = fetch_ucirepo(id=80)
+    X = optdigits.data.features.values.astype(np.float64)
+    y = optdigits.data.targets.values.ravel().astype(np.int64)
+    return X, y
+
+
+def _download_sklearn_digits():
+    """从 sklearn 加载 Digits"""
+    digits = load_digits()
+    X = digits.data.astype(np.float64)
+    y = digits.target.astype(np.int64)
+    return X, y
 
 
 def load_pendigits():
     """
     加载 Pen-Based Recognition of Handwritten Digits 数据集
-    来源: UCI ML Repository (ID: 81)
-    样本: 10,992 (训练 7,494 + 测试 3,498)
-    特征: 16 (笔迹坐标采样)
-    类别: 10 (数字 0-9)
+    样本: 10,992 | 特征: 16 | 类别: 10
+    优先使用 data/raw/pendigits_X.npy + pendigits_y.npy
     """
-    print("[INFO] 正在加载 Pen Digits 数据集...")
-    pendigits = fetch_ucirepo(id=81)
-    X = pendigits.data.features.values.astype(np.float64)
-    y = pendigits.data.targets.values.ravel().astype(np.int64)
-    print(f"[OK] Pen Digits: {X.shape[0]} 样本, {X.shape[1]} 特征, {len(np.unique(y))} 类")
-    return X, y
+    return _load_or_download("pendigits", _download_pendigits)
 
 
 def load_optdigits():
     """
     加载 Optical Recognition of Handwritten Digits 数据集
-    来源: UCI ML Repository (ID: 80)
-    样本: 5,620 (训练 3,823 + 测试 1,797)
-    特征: 64 (8x8 像素灰度值)
-    类别: 10 (数字 0-9)
+    样本: 5,620 | 特征: 64 | 类别: 10
+    优先使用 data/raw/optdigits_X.npy + optdigits_y.npy
     """
-    print("[INFO] 正在加载 Optdigits 数据集...")
-    optdigits = fetch_ucirepo(id=80)
-    X = optdigits.data.features.values.astype(np.float64)
-    y = optdigits.data.targets.values.ravel().astype(np.int64)
-    print(f"[OK] Optdigits: {X.shape[0]} 样本, {X.shape[1]} 特征, {len(np.unique(y))} 类")
-    return X, y
+    return _load_or_download("optdigits", _download_optdigits)
 
 
 def load_sklearn_digits():
     """
     加载 sklearn 内置 Digits 数据集
-    样本: 1,797
-    特征: 64 (8x8 像素灰度值)
-    类别: 10 (数字 0-9)
+    样本: 1,797 | 特征: 64 | 类别: 10
+    优先使用 data/raw/digits_X.npy + digits_y.npy
     """
-    print("[INFO] 正在加载 sklearn Digits 数据集...")
-    digits = load_digits()
-    X = digits.data.astype(np.float64)
-    y = digits.target.astype(np.int64)
-    print(f"[OK] sklearn Digits: {X.shape[0]} 样本, {X.shape[1]} 特征, {len(np.unique(y))} 类")
-    return X, y
+    return _load_or_download("digits", _download_sklearn_digits)
 
 
 def get_all_datasets():
@@ -65,21 +102,16 @@ def get_all_datasets():
     返回: dict[str, tuple[X, y]]
     """
     datasets = {}
-    try:
-        X, y = load_pendigits()
-        datasets["pendigits"] = (X, y)
-    except Exception as e:
-        print(f"[WARN] Pen Digits 加载失败: {e}")
-    try:
-        X, y = load_optdigits()
-        datasets["optdigits"] = (X, y)
-    except Exception as e:
-        print(f"[WARN] Optdigits 加载失败: {e}")
-    try:
-        X, y = load_sklearn_digits()
-        datasets["digits"] = (X, y)
-    except Exception as e:
-        print(f"[WARN] sklearn Digits 加载失败: {e}")
+    for name, loader in [
+        ("pendigits", load_pendigits),
+        ("optdigits", load_optdigits),
+        ("digits", load_sklearn_digits),
+    ]:
+        try:
+            X, y = loader()
+            datasets[name] = (X, y)
+        except Exception as e:
+            print(f"[WARN] {name} 加载失败: {e}")
     return datasets
 
 
