@@ -34,7 +34,8 @@ class GaussianMixtureEM:
     """
     
     def __init__(self, n_components=3, covariance_type="full", max_iter=200,
-                 tol=1e-4, n_init=5, random_state=None, verbose=False):
+                 tol=1e-4, n_init=5, random_state=None, verbose=False,
+                 progress_callback=None):
         """
         参数:
             n_components:   高斯分量数 K
@@ -44,6 +45,8 @@ class GaussianMixtureEM:
             n_init:         随机初始化次数（取最优）
             random_state:   随机种子
             verbose:        是否打印迭代信息
+            progress_callback: 进度回调函数 callback(init_idx, iteration, max_iter)
+                              用于 Streamlit 进度条等场景
         """
         assert covariance_type in ("full", "tied", "diag", "spherical")
         self.n_components = n_components
@@ -53,6 +56,7 @@ class GaussianMixtureEM:
         self.n_init = n_init
         self.random_state = random_state
         self.verbose = verbose
+        self.progress_callback = progress_callback
         
         # 训练后填充
         self.weights_ = None       # 混合系数 π_k, shape (K,)
@@ -229,7 +233,7 @@ class GaussianMixtureEM:
         """
         return np.sum(log_prob_norm)
     
-    def _fit_single(self, X, rng):
+    def _fit_single(self, X, rng, init_idx=0):
         """单次 EM 拟合"""
         weights, means, covs = self._initialize_parameters(X, rng)
         log_weights = np.log(weights + 1e-12)
@@ -243,6 +247,10 @@ class GaussianMixtureEM:
             
             lower_bound = self._compute_lower_bound(X, log_resp, log_prob_norm)
             history.append(lower_bound)
+            
+            # 进度回调
+            if self.progress_callback is not None:
+                self.progress_callback(init_idx, it, self.max_iter)
             
             if self.verbose and it % 10 == 0:
                 print(f"  [EM] iter {it:4d}  log-likelihood = {lower_bound:.4f}")
@@ -285,7 +293,7 @@ class GaussianMixtureEM:
                 print(f"[INIT] 第 {init_i + 1}/{self.n_init} 次初始化")
             
             rng = np.random.RandomState(base_rng.randint(2**31 - 1))
-            weights, means, covs, lb, converged, it, history = self._fit_single(X, rng)
+            weights, means, covs, lb, converged, it, history = self._fit_single(X, rng, init_idx=init_i)
             
             if lb > best_lower_bound:
                 best_lower_bound = lb
@@ -314,6 +322,7 @@ class GaussianMixtureEM:
     def predict_proba(self, X):
         """
         软分配：返回每个样本属于各分量的后验概率
+        使用 log-sum-exp 技巧防止数值溢出（修复 Infinity bug）
         
         返回:
             resp: (n_samples, K) 责任度矩阵
@@ -321,8 +330,10 @@ class GaussianMixtureEM:
         log_weights = np.log(self.weights_ + 1e-12)
         log_prob = self._estimate_log_gaussian_prob(X, self.means_, self.covariances_)
         weighted = log_prob + log_weights
-        log_prob_norm = np.log(np.sum(np.exp(weighted), axis=1))
-        return np.exp(weighted - log_prob_norm[:, np.newaxis])
+        # log-sum-exp: log(Σexp(x_j)) = max_k + log(Σexp(x_j - max_k))
+        max_w = np.max(weighted, axis=1, keepdims=True)
+        log_prob_norm = max_w + np.log(np.sum(np.exp(weighted - max_w), axis=1, keepdims=True))
+        return np.exp(weighted - log_prob_norm)
     
     def score_samples(self, X):
         """返回每个样本的对数似然（用于异常检测），使用 log-sum-exp 防止溢出"""

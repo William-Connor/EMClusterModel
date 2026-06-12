@@ -6,7 +6,7 @@
   "pca_dim": null,
   "selected_k": 10,
   "covariance_type": "full",
-  "train_time_seconds": 2.7,
+  "train_time_seconds": 3.12,
   "n_iterations": 51,
   "converged": true,
   "final_log_likelihood": 77442.26,
@@ -94,16 +94,16 @@
       "predicted_label": 4,
       "raw_prediction": 8,
       "probability": [
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
       ]
     },
     {
@@ -274,16 +274,16 @@
       "predicted_label": 4,
       "raw_prediction": 8,
       "probability": [
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity,
-        Infinity
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
       ]
     },
     {

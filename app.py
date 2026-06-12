@@ -117,18 +117,33 @@ if run_experiment:
         st.metric("测试集", f"{X_test.shape[0]} 样本")
     
     # Step 3: 训练
-    with st.spinner(f"训练 GMM-EM 中 (K={k_value or 'auto'}, cov={cov_type})..."):
-        n_classes = len(np.unique(y))
-        actual_k = k_value or n_classes
-        t0 = time.time()
-        gmm = GaussianMixtureEM(
-            n_components=actual_k, covariance_type=cov_type,
-            max_iter=max_iter, tol=tol, n_init=n_init,
-            random_state=42, verbose=False
-        )
-        gmm.fit(X_train)
-        train_time = time.time() - t0
+    n_classes = len(np.unique(y))
+    actual_k = k_value or n_classes
     
+    st.markdown(f"⏳ **训练中** (K={actual_k}, cov={cov_type})...")
+    progress_bar = st.progress(0, text="初始化...")
+    status_text = st.empty()
+    
+    # 进度回调：init_idx(0..n_init-1), iteration(0..max_iter-1), max_iter
+    def on_progress(init_idx, iteration, max_iter):
+        total_iters = n_init * max_iter
+        completed = init_idx * max_iter + (iteration + 1)
+        pct = min(completed / total_iters, 0.99)
+        progress_bar.progress(pct, text=f"初始化 {init_idx+1}/{n_init} · 迭代 {iteration+1}/{max_iter}")
+        status_text.caption(f"⏳ EM 迭代中... 第 {init_idx+1} 次初始化")
+    
+    t0 = time.time()
+    gmm = GaussianMixtureEM(
+        n_components=actual_k, covariance_type=cov_type,
+        max_iter=max_iter, tol=tol, n_init=n_init,
+        random_state=42, verbose=False,
+        progress_callback=on_progress
+    )
+    gmm.fit(X_train)
+    train_time = time.time() - t0
+    
+    progress_bar.progress(1.0, text="训练完成！")
+    status_text.empty()
     st.success(f"✅ 训练完成！耗时 {train_time:.2f}s，迭代 {gmm.n_iter_} 次，"
                 f"{'已收敛' if gmm.converged_ else '达到最大迭代'}")
     
@@ -270,7 +285,7 @@ else:
     
     ### 🧠 算法简介
     
-    **GMM（高斯混合模型）**假设数据由 K 个高斯分布混合生成，每个数据点属于各分布的概率由后验概率确定。
+    **GMM（高斯混合模型）** 假设数据由 K 个高斯分布混合生成，每个数据点属于各分布的概率由后验概率确定。
     
     **EM 算法**迭代求解：
     - **E-step**：基于当前参数，估计每个点属于各分布的责任度 γ
