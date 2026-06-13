@@ -68,7 +68,7 @@ else:
 # PCA 降维
 use_pca = st.sidebar.checkbox("PCA 降维", value=True)
 if use_pca:
-    pca_dim = st.sidebar.slider("PCA 维度", min_value=2, max_value=64, value=30)
+    pca_dim = st.sidebar.slider("PCA 维度", min_value=2, max_value=784, value=50)
 else:
     pca_dim = None
 
