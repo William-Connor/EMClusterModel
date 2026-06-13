@@ -165,8 +165,11 @@ class GaussianMixtureEM:
         log_prob = self._estimate_log_gaussian_prob(X, means, covs)
         weighted_log_prob = log_prob + log_weights  # (n_samples, K)
         
-        # log Σ_j exp(log π_j + log p)
-        log_prob_norm = np.log(np.sum(np.exp(weighted_log_prob), axis=1))
+        # log-sum-exp trick 防止高维数值下溢导致 NaN
+        max_w = np.max(weighted_log_prob, axis=1, keepdims=True)
+        log_prob_norm = (max_w + np.log(
+            np.sum(np.exp(weighted_log_prob - max_w), axis=1, keepdims=True)
+        )).ravel()
         
         # log γ(z_{ik}) = weighted - log(norm)
         log_resp = weighted_log_prob - log_prob_norm[:, np.newaxis]
