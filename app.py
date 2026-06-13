@@ -47,11 +47,13 @@ st.sidebar.header("⚙️ 参数配置")
 # 数据集选择
 dataset_option = st.sidebar.selectbox(
     "📦 数据集",
-    options=["pendigits", "optdigits", "digits"],
+    options=["pendigits", "optdigits", "digits", "mnist", "fashion_mnist"],
     format_func=lambda x: {
         "pendigits": "Pen Digits (10,992 × 16)",
         "optdigits": "Optdigits (5,620 × 64)",
         "digits": "sklearn Digits (1,797 × 64)",
+        "mnist": "MNIST (70,000 × 784)",
+        "fashion_mnist": "Fashion-MNIST (70,000 × 784)",
     }[x],
     help="选择用于聚类实验的数据集"
 )
@@ -275,10 +277,12 @@ else:
     st.markdown("""
     ### 📖 使用说明
     
-    1. **选择数据集**：三种手写数字数据集可选
+    1. **选择数据集**：五种数据集可选
        - Pen Digits: 笔迹坐标特征，16 维
        - Optdigits: 像素灰度特征，64 维  
        - sklearn Digits: 小规模，64 维
+       - MNIST: 大规模手写数字，784 维
+       - Fashion-MNIST: 大规模服饰图像，784 维
     2. **配置参数**：可选择自动确定 K 或手动指定
     3. **运行实验**：点击按钮开始训练
     4. **查看结果**：在多个 Tab 页中查看聚类效果

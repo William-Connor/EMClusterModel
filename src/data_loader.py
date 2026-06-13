@@ -7,7 +7,7 @@ EM 聚类算法工程 — 数据加载模块
 
 import os
 import numpy as np
-from sklearn.datasets import load_digits
+from sklearn.datasets import load_digits, fetch_openml
 
 # 数据目录：项目根目录下的 data/raw/
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -96,6 +96,40 @@ def load_sklearn_digits():
     return _load_or_download("digits", _download_sklearn_digits)
 
 
+def _download_mnist():
+    """从 OpenML 下载 MNIST"""
+    mnist = fetch_openml('mnist_784', version=1, as_frame=False, parser='auto')
+    X = mnist.data.astype(np.float64)
+    y = mnist.target.astype(np.int64)
+    return X, y
+
+
+def _download_fashion_mnist():
+    """从 OpenML 下载 Fashion-MNIST"""
+    fmnist = fetch_openml('Fashion-MNIST', version=1, as_frame=False, parser='auto')
+    X = fmnist.data.astype(np.float64)
+    y = fmnist.target.astype(np.int64)
+    return X, y
+
+
+def load_mnist():
+    """
+    加载 MNIST 手写数字数据集
+    样本: 70,000 | 特征: 784 (28×28) | 类别: 10
+    优先使用 data/raw/mnist_X.npy + mnist_y.npy
+    """
+    return _load_or_download("mnist", _download_mnist)
+
+
+def load_fashion_mnist():
+    """
+    加载 Fashion-MNIST 服饰数据集
+    样本: 70,000 | 特征: 784 (28×28) | 类别: 10
+    优先使用 data/raw/fashion_mnist_X.npy + fashion_mnist_y.npy
+    """
+    return _load_or_download("fashion_mnist", _download_fashion_mnist)
+
+
 def get_all_datasets():
     """
     返回所有可用数据集
@@ -106,6 +140,8 @@ def get_all_datasets():
         ("pendigits", load_pendigits),
         ("optdigits", load_optdigits),
         ("digits", load_sklearn_digits),
+        ("mnist", load_mnist),
+        ("fashion_mnist", load_fashion_mnist),
     ]:
         try:
             X, y = loader()
