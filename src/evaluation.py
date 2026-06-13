@@ -43,7 +43,7 @@ def hungarian_align(y_true, y_pred):
             cost[i, j] = -np.sum(mask_true & mask_pred)
     
     row_ind, col_ind = linear_sum_assignment(cost)
-    mapping = {col: row for row, col in zip(row_ind, col_ind) if row < n_classes and col < n_classes}
+    mapping = {int(col): int(row) for row, col in zip(row_ind, col_ind) if row < n_classes and col < n_classes}
     
     y_aligned = np.array([mapping.get(p, -1) for p in y_pred])
     return y_aligned, mapping
